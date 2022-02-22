@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { getPosts, deletePostById } from "../services/api";
 import PostsList from "../PostsList/PostsList";
+import ModalFormUpdatePost from "../ModalFormUpdatePost/ModalFormUpdatePost";
 
 const Posts = () => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -20,6 +21,7 @@ const Posts = () => {
   const [postsList, setPostsList] = useState([]);
   const [postId, setPostId] = useState("");
   const [sendDelete, setSendDelete] = useState(false);
+  const [currentPostContent, setCurrentPostContent] = useState(null);
 
   const handleClickDelete = useCallback(
     (id) => {
@@ -28,17 +30,19 @@ const Posts = () => {
     },
     [setOpenDeleteModal, setPostId]
   );
+
   const handleClickUpdate = useCallback(
     (id) => {
       setOpenUpdateModal(true);
-      setPostId(id);
+      setCurrentPostContent(postsList.find((item) => item.id === id));
     },
-    [setOpenUpdateModal, setPostId]
+    [setOpenUpdateModal, postsList]
   );
 
   const handleCloseAndNotDelete = () => {
     setOpenDeleteModal(false);
   };
+
   const handleCloseAndDelete = () => {
     setSendDelete(true);
     setOpenDeleteModal(false);
@@ -49,9 +53,7 @@ const Posts = () => {
 
   const handleCloseAndNotUpdate = () => {
     setOpenUpdateModal(false);
-  };
-  const handleCloseAndUpdate = () => {
-    setOpenUpdateModal(false);
+    setCurrentPostContent(null);
   };
 
   useEffect(() => {
@@ -102,23 +104,13 @@ const Posts = () => {
             </DialogActions>
           </Dialog>
           {/* Модалка изменения */}
-          <Dialog
-            open={openUpdateModal}
-            onClose={handleCloseAndNotUpdate}
-            aria-labelledby="alert-dialog-Update"
-          >
-            <DialogTitle id="alert-dialog-Update">Update post</DialogTitle>
-            <DialogContent>
-              <DialogContentText>Form Update Post</DialogContentText>
-            </DialogContent>
-            {/* Кнопки подтверждения */}
-            <DialogActions>
-              <Button onClick={handleCloseAndNotUpdate}>No</Button>
-              <Button onClick={handleCloseAndUpdate} autoFocus>
-                Yes
-              </Button>
-            </DialogActions>
-          </Dialog>
+          {currentPostContent && (
+            <ModalFormUpdatePost
+              currentPostContent={currentPostContent}
+              openUpdateModal={openUpdateModal}
+              handleCloseAndNotUpdate={handleCloseAndNotUpdate}
+            />
+          )}
         </Grid>
       </Box>
     </>
