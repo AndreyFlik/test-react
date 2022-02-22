@@ -2,7 +2,7 @@ import React, { memo } from "react";
 
 import { styled } from "@mui/material/styles";
 import { Grid, Paper, Button } from "@mui/material";
-// import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 const PostsList = ({ postsList, handleClickDelete, handleClickUpdate }) => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -33,6 +33,10 @@ const PostsList = ({ postsList, handleClickDelete, handleClickUpdate }) => {
   );
 };
 
-// PostsList.propTypes = {}
+PostsList.propTypes = {
+  postsList: PropTypes.array,
+  handleClickDelete: PropTypes.func,
+  handleClickUpdate: PropTypes.func,
+};
 
 export default memo(PostsList);
