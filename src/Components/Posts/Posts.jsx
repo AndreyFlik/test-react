@@ -109,6 +109,9 @@ const Posts = () => {
               currentPostContent={currentPostContent}
               openUpdateModal={openUpdateModal}
               handleCloseAndNotUpdate={handleCloseAndNotUpdate}
+              setCurrentPostContent={setCurrentPostContent}
+              setPostsList={setPostsList}
+              postsList={postsList}
             />
           )}
         </Grid>

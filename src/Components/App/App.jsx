@@ -2,9 +2,9 @@
 import Posts from "../Posts/Posts";
 function App() {
   return (
-    <div>
+    <>
       <Posts />
-    </div>
+    </>
   );
 }
 

@@ -19,10 +19,14 @@ const deletePostById = async (postId) => {
   return res.json();
 };
 
-const updatePostById = async (postId, newBody) => {
-  const res = await fetch(`${URL}posts/${postId}`, {
+const updatePostById = async (currentPostContent, newBody) => {
+  const res = await fetch(`${URL}posts/${currentPostContent.id}`, {
     method: "PUT",
-    body: JSON.stringify(newBody),
+    body: JSON.stringify({
+      ...currentPostContent,
+      title: newBody.title,
+      body: newBody.body,
+    }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },

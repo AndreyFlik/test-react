@@ -7,16 +7,19 @@ import {
   Button,
   DialogActions,
 } from "@mui/material";
+import { updatePostById } from "../services/api";
 import { useFormik } from "formik";
 
 const ModalFormUpdatePost = ({
   currentPostContent,
   openUpdateModal,
   handleCloseAndNotUpdate,
+  setCurrentPostContent,
+  setPostsList,
+  postsList,
 }) => {
   // формик
   const validate = (values) => {
-    console.log(values);
     const errors = {};
 
     if (!values.title) {
@@ -29,7 +32,6 @@ const ModalFormUpdatePost = ({
     } else if (values.body.length > 1000 || values.body.length < 1) {
       errors.body = "1-1000 characters";
     }
-    console.log(errors);
     return errors;
   };
 
@@ -40,9 +42,19 @@ const ModalFormUpdatePost = ({
     },
     validate,
     onSubmit: (values, { setSubmitting, resetForm }) => {
-      // addList(values);
+      updatePostById(currentPostContent, values)
+        .then((post) => {
+          const newArray = postsList.map((list) => {
+            if (list.id === post.id) {
+              return { ...list, ...post };
+            }
+            return list;
+          });
+          setPostsList(newArray);
+        })
+        .catch((error) => console.error(error.message));
       console.log(values);
-      // setCurrentPostContent(null);
+      setCurrentPostContent(null);
       resetForm();
     },
   });
