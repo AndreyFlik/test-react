@@ -68,6 +68,9 @@ const ModalFormUpdatePost = ({
       <DialogContent>
         <form onSubmit={formik.handleSubmit}>
           <TextField
+            sx={{ width: "100%" }}
+            multiline
+            rows={5}
             onChange={formik.handleChange}
             value={formik.values.title}
             type="text"
@@ -80,6 +83,9 @@ const ModalFormUpdatePost = ({
           />
 
           <TextField
+            sx={{ width: "100%" }}
+            multiline
+            rows={5}
             onChange={formik.handleChange}
             value={formik.values.body}
             type="text"
