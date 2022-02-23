@@ -82,10 +82,11 @@ const Posts = () => {
           color="primary"
           variant="contained"
           onClick={handleClickAddNewPost}
+          sx={{ mb: 1, mt: 1 }}
         >
           Add New Post
         </Button>
-        <Box>
+        <Box sx={{ mb: 1 }}>
           <Grid container spacing={4}>
             <PostsList
               handleClickDelete={handleClickDelete}
