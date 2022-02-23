@@ -8,6 +8,7 @@ import {
   CardContent,
   Typography,
   CardActions,
+  CardMedia,
 } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -16,33 +17,47 @@ const PostsList = ({ postsList, handleClickDelete, handleClickUpdate }) => {
     <>
       {postsList.map((post, index) => (
         <Grid item xs={12} sm={6} md={4} key={post.id}>
-          <Card>
-            <img
-              src={`https://picsum.photos/300/200/?random=${index}`}
-              alt={`random pic`}
+          <Card
+            sx={{
+              maxWidth: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* <Grid container direction="column"> */}
+            <CardMedia
+              component="img"
+              width="350"
+              image={`https://picsum.photos/350/200/?random=${index}`}
+              alt="random pic"
             />
             <CardContent>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h5" gutterBottom component="h2">
                 {post.title}
               </Typography>
-              <Typography>{post.body}</Typography>
-              <CardActions>
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={() => handleClickUpdate(post.id)}
-                >
-                  Update
-                </Button>
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={() => handleClickDelete(post.id)}
-                >
-                  Delete
-                </Button>
-              </CardActions>
+              <Typography variant="body2" color="text.secondary" component="p">
+                {post.body}
+              </Typography>
             </CardContent>
+
+            <CardActions sx={{ mt: "auto" }}>
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => handleClickUpdate(post.id)}
+              >
+                Update
+              </Button>
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => handleClickDelete(post.id)}
+              >
+                Delete
+              </Button>
+            </CardActions>
+            {/* </Grid> */}
           </Card>
         </Grid>
       ))}
