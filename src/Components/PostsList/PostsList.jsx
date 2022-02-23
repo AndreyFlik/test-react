@@ -1,32 +1,49 @@
 import React, { memo } from "react";
 
-import { styled } from "@mui/material/styles";
-import { Grid, Paper, Button } from "@mui/material";
+// import { styled } from "@mui/material/styles";
+import {
+  Grid,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  CardActions,
+} from "@mui/material";
 import PropTypes from "prop-types";
 
 const PostsList = ({ postsList, handleClickDelete, handleClickUpdate }) => {
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "start",
-    color: theme.palette.text.secondary,
-  }));
-
   return (
     <>
       {postsList.map((post, index) => (
-        <Grid item xs={4} key={post.id}>
-          <Item>
+        <Grid item xs={12} sm={6} md={4} key={post.id}>
+          <Card>
             <img
               src={`https://picsum.photos/300/200/?random=${index}`}
               alt={`random pic`}
             />
-            <h2>{post.title}</h2>
-            <p>{post.body}</p>
-            <Button onClick={() => handleClickUpdate(post.id)}>Update</Button>
-            <Button onClick={() => handleClickDelete(post.id)}>Delete</Button>
-          </Item>
+            <CardContent>
+              <Typography variant="h5" gutterBottom>
+                {post.title}
+              </Typography>
+              <Typography>{post.body}</Typography>
+              <CardActions>
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => handleClickUpdate(post.id)}
+                >
+                  Update
+                </Button>
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => handleClickDelete(post.id)}
+                >
+                  Delete
+                </Button>
+              </CardActions>
+            </CardContent>
+          </Card>
         </Grid>
       ))}
     </>

@@ -37,5 +37,23 @@ const updatePostById = async (currentPostContent, newBody) => {
 
   return res.json();
 };
+const addNewPost = async (body) => {
+  const res = await fetch(`${URL}posts`, {
+    method: "POST",
+    body: JSON.stringify({
+      title: body.title,
+      body: body.body,
+      userId: 1,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  if (res.status !== 201) {
+    return Promise.reject("Oops, something went wrong");
+  }
 
-export { getPosts, deletePostById, updatePostById };
+  return res.json();
+};
+
+export { getPosts, deletePostById, updatePostById, addNewPost };

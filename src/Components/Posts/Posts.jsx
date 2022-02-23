@@ -1,35 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
-// import PropTypes from 'prop-types'
-
-import {
-  Grid,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Grid, Box, Button, Container } from "@mui/material";
 import { getPosts, deletePostById } from "../services/api";
 import PostsList from "../PostsList/PostsList";
 import ModalFormUpdatePost from "../ModalFormUpdatePost/ModalFormUpdatePost";
+import ModalFormNewPost from "../ModalFormNewPost/ModalFormNewPost";
+import ModalDeletePost from "../ModalDeletePost/ModalDeletePost";
 
 const Posts = () => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openAddNewPostModal, setOpenAddNewPostModal] = useState(false);
   const [postsList, setPostsList] = useState([]);
   const [postId, setPostId] = useState("");
   const [sendDelete, setSendDelete] = useState(false);
   const [currentPostContent, setCurrentPostContent] = useState(null);
-
-  const handleClickDelete = useCallback(
-    (id) => {
-      setOpenDeleteModal(true);
-      setPostId(id);
-    },
-    [setOpenDeleteModal, setPostId]
-  );
 
   const handleClickUpdate = useCallback(
     (id) => {
@@ -37,6 +21,19 @@ const Posts = () => {
       setCurrentPostContent(postsList.find((item) => item.id === id));
     },
     [setOpenUpdateModal, postsList]
+  );
+
+  const handleCloseAndNotUpdate = () => {
+    setOpenUpdateModal(false);
+    setCurrentPostContent(null);
+  };
+
+  const handleClickDelete = useCallback(
+    (id) => {
+      setOpenDeleteModal(true);
+      setPostId(id);
+    },
+    [setOpenDeleteModal, setPostId]
   );
 
   const handleCloseAndNotDelete = () => {
@@ -51,10 +48,12 @@ const Posts = () => {
     }
   };
 
-  const handleCloseAndNotUpdate = () => {
-    setOpenUpdateModal(false);
-    setCurrentPostContent(null);
-  };
+  const handleClickAddNewPost = useCallback(() => {
+    setOpenAddNewPostModal(true);
+  }, []);
+  const handleClickNotAddNewPost = useCallback(() => {
+    setOpenAddNewPostModal(false);
+  }, []);
 
   useEffect(() => {
     getPosts()
@@ -68,7 +67,7 @@ const Posts = () => {
     }
     deletePostById(postId)
       .then((post) => {
-        console.log(post);
+        console.log(`Delete`);
       })
       .catch((error) => console.error(error.message));
 
@@ -78,57 +77,48 @@ const Posts = () => {
 
   return (
     <>
-      <Box sx={{ width: "1000px" }}>
-        <Grid container spacing={2}>
-          <PostsList
-            handleClickDelete={handleClickDelete}
-            handleClickUpdate={handleClickUpdate}
-            postsList={postsList}
-          />
-          {/* Модалка удаления */}
-          <Dialog
-            open={openDeleteModal}
-            onClose={handleCloseAndNotDelete}
-            aria-labelledby="alert-dialog-Delete"
-          >
-            <DialogTitle id="alert-dialog-Delete">Delete?</DialogTitle>
-            <DialogContent>
-              <DialogContentText>Delete this post?</DialogContentText>
-            </DialogContent>
-            {/* Кнопки подтверждения */}
-            <DialogActions>
-              <Button onClick={handleCloseAndNotDelete}>No</Button>
-              <Button onClick={handleCloseAndDelete} autoFocus>
-                Yes
-              </Button>
-            </DialogActions>
-          </Dialog>
-          {/* Модалка изменения */}
-          {currentPostContent && (
-            <ModalFormUpdatePost
-              currentPostContent={currentPostContent}
-              openUpdateModal={openUpdateModal}
-              handleCloseAndNotUpdate={handleCloseAndNotUpdate}
-              setCurrentPostContent={setCurrentPostContent}
-              setPostsList={setPostsList}
+      <Container>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={handleClickAddNewPost}
+        >
+          Add New Post
+        </Button>
+        <Box>
+          <Grid container spacing={4}>
+            <PostsList
+              handleClickDelete={handleClickDelete}
+              handleClickUpdate={handleClickUpdate}
               postsList={postsList}
             />
-          )}
-        </Grid>
-      </Box>
+            <ModalDeletePost
+              openModal={openDeleteModal}
+              handleCloseAndNotDelete={handleCloseAndNotDelete}
+              handleCloseAndDelete={handleCloseAndDelete}
+            />
+            {currentPostContent && (
+              <ModalFormUpdatePost
+                currentPostContent={currentPostContent}
+                openUpdateModal={openUpdateModal}
+                handleCloseAndNotUpdate={handleCloseAndNotUpdate}
+                setCurrentPostContent={setCurrentPostContent}
+                setPostsList={setPostsList}
+                postsList={postsList}
+              />
+            )}
+            <ModalFormNewPost
+              openModal={openAddNewPostModal}
+              closeModal={handleClickNotAddNewPost}
+              setPostsList={setPostsList}
+              postsList={postsList}
+              closeModalAddPost={setOpenAddNewPostModal}
+            />
+          </Grid>
+        </Box>
+      </Container>
     </>
   );
 };
 
-// Posts.propTypes = {}
-
 export default Posts;
-
-// GET	/posts
-// GET	/posts/1
-// GET	/posts/1/comments
-// GET	/comments?postId=1
-// POST	/posts
-// PUT	/posts/1
-// PATCH	/posts/1
-// DELETE	/posts/1

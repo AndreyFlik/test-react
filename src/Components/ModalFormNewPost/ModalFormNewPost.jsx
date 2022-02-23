@@ -1,4 +1,5 @@
 import React from "react";
+import { useFormik } from "formik";
 import {
   Dialog,
   TextField,
@@ -7,17 +8,15 @@ import {
   Button,
   DialogActions,
 } from "@mui/material";
-import { updatePostById } from "../services/api";
-import { useFormik } from "formik";
 import PropTypes from "prop-types";
+import { addNewPost } from "../services/api";
 
-const ModalFormUpdatePost = ({
-  currentPostContent,
-  openUpdateModal,
-  handleCloseAndNotUpdate,
-  setCurrentPostContent,
+const ModalFormNewPost = ({
+  openModal,
+  closeModal,
   setPostsList,
   postsList,
+  closeModalAddPost,
 }) => {
   const validate = (values) => {
     const errors = {};
@@ -37,34 +36,28 @@ const ModalFormUpdatePost = ({
 
   const formik = useFormik({
     initialValues: {
-      title: currentPostContent?.title,
-      body: currentPostContent?.body,
+      title: "",
+      body: "",
     },
     validate,
     onSubmit: (values, { setSubmitting, resetForm }) => {
-      updatePostById(currentPostContent, values)
+      addNewPost(values)
         .then((post) => {
-          const newArray = postsList.map((list) => {
-            if (list.id === post.id) {
-              return { ...list, ...post };
-            }
-            return list;
-          });
-          setPostsList(newArray);
+          setPostsList([...postsList, post]);
+          closeModalAddPost(false);
         })
         .catch((error) => console.error(error.message));
-      setCurrentPostContent(null);
       resetForm();
     },
   });
 
   return (
     <Dialog
-      open={openUpdateModal}
-      onClose={handleCloseAndNotUpdate}
+      open={openModal}
+      onClose={closeModal}
       aria-labelledby="alert-dialog-Update"
     >
-      <DialogTitle id="alert-dialog-Update">Update post</DialogTitle>
+      <DialogTitle id="alert-dialog-Update">Add New Post</DialogTitle>
       <DialogContent>
         <form onSubmit={formik.handleSubmit}>
           <TextField
@@ -93,23 +86,24 @@ const ModalFormUpdatePost = ({
 
           <div>
             <Button color="primary" variant="contained" type="submit">
-              Update Post
+              Add
             </Button>
           </div>
         </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseAndNotUpdate}>Close</Button>
+        <Button onClick={closeModal}>Close</Button>
       </DialogActions>
     </Dialog>
   );
 };
-ModalFormUpdatePost.propTypes = {
-  currentPostContent: PropTypes.object,
-  openUpdateModal: PropTypes.bool,
-  handleCloseAndNotUpdate: PropTypes.func,
-  setCurrentPostContent: PropTypes.func,
+
+ModalFormNewPost.propTypes = {
+  openModal: PropTypes.bool,
+  closeModal: PropTypes.func,
   setPostsList: PropTypes.func,
   postsList: PropTypes.array,
+  closeModalAddPost: PropTypes.func,
 };
-export default ModalFormUpdatePost;
+
+export default ModalFormNewPost;
