@@ -33,7 +33,7 @@ const PostsList = ({ postsList, handleClickDelete, handleClickUpdate }) => {
               alt="random pic"
             />
             <CardContent>
-              <Typography variant="h5" gutterBottom component="h2">
+              <Typography variant="h6" gutterBottom component="h2">
                 {post.title}
               </Typography>
               <Typography variant="body2" color="text.secondary" component="p">
